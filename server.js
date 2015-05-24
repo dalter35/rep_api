@@ -1,5 +1,6 @@
 var express = require('express');
 var db = require("./db");
+var User = require("./models/models").User;
 
 var app = express();
 
@@ -12,6 +13,18 @@ app.all('*', function(req, res, next) {
 
 db.connect("mongodb://localhost/rep_api", function(){
 	console.log('connected');
+});
+
+app.get('/api/users', function(req, res){
+    User.find({}, function(err, _users){
+        res.send(_users)
+    });
+});
+
+app.get('/api/users/:id', function(req, res){
+    User.findOne({_id: req.params.id}, function(err, _user){
+        res.send(_user);
+    })
 })
 
 app.listen(process.env.PORT);
